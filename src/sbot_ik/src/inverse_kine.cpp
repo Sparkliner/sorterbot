@@ -39,19 +39,27 @@ void calculateInverseKinematics(const sbot_msg::Position2D::ConstPtr& loc)
 
 	if (sqrt(pow(x,2)+pow(y,2)) > (L1+L2)) //test for out of reach conditions
 	{
-		angle1 = 90;
-		angle2 = 90;
+		ROS_INFO("Robot tried to reach too far");
+		angle2 = ERR;
+	}
+
+	if (angle1 > 270)
+	{
+		ROS_INFO("Servo 1 cannot turn past 270");
+		angle1 = 270;
 	}
 
 
 	//avoid singularity conditions by using offset ERR
 	if (abs(angle2-180.0) < ERR)
 	{
+		ROS_INFO("Robot at fully bent singularity");
 		angle2 = 180.0 - ERR;
 	}
 
 	if (abs(angle2) < ERR)
 	{
+		ROS_INFO("Robot at fully extended singularity");
 		angle2 = ERR;
 	}
 
