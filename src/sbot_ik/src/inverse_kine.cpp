@@ -40,7 +40,7 @@ void calculateInverseKinematics(const sbot_msg::Position2D::ConstPtr& loc)
 	if (sqrt(pow(x,2)+pow(y,2)) > (L1+L2)) //test for out of reach conditions
 	{
 		ROS_INFO("Robot tried to reach too far");
-		angle1 = wrapAngle(atan2(y,x));
+		angle1 = wrapAngle(atan2(y,x)*180.0/PI);
 		angle2 = ERR;
 	}
 
