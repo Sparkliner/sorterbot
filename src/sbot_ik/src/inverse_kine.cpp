@@ -9,6 +9,17 @@
 
 #define ERR 10
 
+double wrapAngle(double angle) // constrain to 0-360
+{
+	angle = fmod(angle,360);
+	if (angle < 0)
+	{
+		angle += 360;
+	}
+
+	return angle;
+}
+
 void calculateInverseKinematics(const sbot_msg::Position2D::ConstPtr& loc)
 {
 	double x, y, angle1, angle2;
@@ -19,12 +30,21 @@ void calculateInverseKinematics(const sbot_msg::Position2D::ConstPtr& loc)
 
 	// law of cosines
 	angle2 = acos((pow(x,2)+pow(y,2)-pow(L1,2)-pow(L2,2))/(2*L1*L2));
-	angle1 = atan2(L2*sin(angle2)*x+(L1+L2*cos(angle2))*y,(L1+L2*cos(angle2))*x-L2*sin(angle2)*y);
+	angle1 = atan2(-L2*sin(angle2)*x+(L1+L2*cos(angle2))*y,(L1+L2*cos(angle2))*x+L2*sin(angle2)*y);
 
-	//convert to degrees
-	angle1 = angle1*180.0/PI;
-	angle2 = angle2*180.0/PI;
+	//convert to degrees and wrap to 0-360
+	angle1 = wrapAngle(angle1*180.0/PI);
+	angle2 = wrapAngle(angle2*180.0/PI);
+	
 
+	if (sqrt(pow(x,2)+pow(y,2)) > (L1+L2)) //test for out of reach conditions
+	{
+		angle1 = 90;
+		angle2 = 90;
+	}
+
+
+	//avoid singularity conditions by using offset ERR
 	if (abs(angle2-180.0) < ERR)
 	{
 		angle2 = 180.0 - ERR;
@@ -35,12 +55,7 @@ void calculateInverseKinematics(const sbot_msg::Position2D::ConstPtr& loc)
 		angle2 = ERR;
 	}
 
-	if (sqrt(pow(x,2)+pow(y,2)) > (L1+L2)) //test for out of reach conditions
-	{
-		angle1 = 0;
-		angle2 = 90;
-	}
-
+	
 	ROS_INFO("Sending: theta1=%f degres, theta2=%f degrees", angle1, angle2);
 
 	
