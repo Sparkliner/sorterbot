@@ -35,6 +35,12 @@ void calculateInverseKinematics(const sbot_msg::Position2D::ConstPtr& loc)
 		angle2 = ERR;
 	}
 
+	if (sqrt(pow(x,2)+pow(y,2)) > (L1+L2)) //test for out of reach conditions
+	{
+		angle1 = 0;
+		angle2 = 90;
+	}
+
 	ROS_INFO("Sending: theta1=%f degres, theta2=%f degrees", angle1, angle2);
 
 	
