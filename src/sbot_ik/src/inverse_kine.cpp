@@ -7,6 +7,8 @@
 #define L1 25.4
 #define L2 25.4
 
+#define ERR 10
+
 void calculateInverseKinematics(const sbot_msg::Position2D::ConstPtr& loc)
 {
 	double x, y, angle1, angle2;
@@ -22,6 +24,16 @@ void calculateInverseKinematics(const sbot_msg::Position2D::ConstPtr& loc)
 	//convert to degrees
 	angle1 = angle1*180.0/PI;
 	angle2 = angle2*180.0/PI;
+
+	if (abs(angle2-180.0) < ERR)
+	{
+		angle2 = 180.0 - ERR;
+	}
+
+	if (abs(angle2) < ERR)
+	{
+		angle2 = ERR;
+	}
 
 	ROS_INFO("Sending: theta1=%f degres, theta2=%f degrees", angle1, angle2);
 
