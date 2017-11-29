@@ -199,4 +199,4 @@ include_directories(
 
 add_executable(inverse_kine src/inverse_kine.cpp)
 target_link_libraries(inverse_kine ${catkin_LIBRARIES})
-add_dependencies(inverse_kine sbot_mgs_generate_messages_cpp)
+add_dependencies(inverse_kine sbot_msg_generate_messages_cpp)
