@@ -79,7 +79,7 @@ int main(int argc, char **argv)
 	
 	ros::Subscriber sub = n.subscribe("targetposition", 1000, calculateInverseKinematics);
 	
-	ros::spin();
+	ros::spinOnce();
 	
 	return 0;
 }

@@ -8,9 +8,19 @@ def talker():
 	rospy.init_node('talker', anonymous=True)
 	rate = rospy.Rate(10)
 	outputData = Position2D()
+	myX = -43
+	myY = -43
 	while not rospy.is_shutdown():
-		outputData.x = 1.0
-		outputData.y = 2.0
+		outputData.x = myX
+		outputData.y = myY
+
+		myX = myX+1
+		if (myX > 43):
+			myX = -43
+			myY = myY + 1
+			if (myY > 43):
+				myY = -43
+
 		#rospy.loginfo(outputData)
 		pub.publish(outputData)
 		rate.sleep()
