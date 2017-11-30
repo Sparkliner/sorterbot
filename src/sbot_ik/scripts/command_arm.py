@@ -11,8 +11,8 @@ def sendArmCommand(jtarget):
 	dutycyc1 = 25 #0 to 100
 	dutycyc2 = 50 #test different duty cycles
 	#PWM.start("PIN",dutycycle,frequency,polarity(2 is inverted))
-	PWM.start("P9_14", dutycyc1, 2000, 0) #joint 1
-	PWM.start("P9_16", dutycyc2, 2000, 0) #joint 2
+	PWM.start("P9_14", dutycyc1, 1000, 0) #joint 1
+	PWM.start("P9_16", dutycyc2, 1000, 0) #joint 2
 
 def listener():
 	rospy.init_node('joint_target_listener', anonymous=True)
