@@ -1,0 +1,4 @@
+<launch>
+	<node pkg="sbot_ik" name="ikcalc" type="inverse_kine"/>
+	<node pkg="sbot_ik" name="cmdarm" type="command_arm.py"/>
+</launch>
