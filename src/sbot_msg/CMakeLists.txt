@@ -52,6 +52,10 @@ find_package(catkin REQUIRED COMPONENTS
    FILES
    Position2D.msg
    JointTarget.msg
+   EFCommand.msg
+   EFStatus.msg
+   SBotStatus.msg
+   TargetColor.msg
  )
 
 ## Generate services in the 'srv' folder
