@@ -198,3 +198,7 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+add_executable(bbb_core src/bbb_core.cpp)
+target_link_libraries(bbb_core ${catkin_LIBRARIES})
+add_dependencies(bbb_core sbot_msg_generate_messages_cpp)

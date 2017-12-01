@@ -6,17 +6,53 @@
 #include "sbot_msg/SBotStatus.h"
 #include <string>
 
-enum class SysState {
+
+class SorterBotBBBCore
+{
+
+enum SysState {
 	READY, RETRIEVAL, DELIVERY
 };
 
-class SorterBotBBBCore()
-{
-public:
+private:
 	SysState SBState;
+	ros::NodeHandle n;
+	ros::Publisher PositionPub;
+	ros::Publisher EFCommandPub;
+	ros::Subscriber ColorSub;
+	ros::Subscriber EFStatusSub;
+	ros::Subscriber IPSub;
 
+	void chooseGrabTarget(const sbot_msg::Position2D::ConstPtr& loc)
+	{}
+
+	void chooseDropTarget(const sbot_msg::TargetColor::ConstPtr& tcolor)
+	{}
+
+	void monitorEFState(const sbot_msg::EFStatus::ConstPtr& efstat)
+	{}
+
+public:
 	SorterBotBBBCore()
 	{
-		SBState = SysState::READY;
+		SBState = READY;
+		//advertise topics here
+		PositionPub = n.advertise<sbot_msg::Position2D>("targetposition",1000);
+		EFCommandPub = n.advertise<sbot_msg::EFCommand>("ef_command",1000);
+		//subscribe topics here
+		IPSub = n.subscribe("relativeposition", 1000, &SorterBotBBBCore::chooseGrabTarget,this);
+		ColorSub = n.subscribe("targetcolor", 1000, &SorterBotBBBCore::chooseDropTarget,this);
+		EFStatusSub = n.subscribe("ef_status", 1000, &SorterBotBBBCore::monitorEFState,this);
 	}
+};
+
+int main(int argc, char **argv)
+{
+	ros::init(argc,argv,"bbb_core");
+
+	SorterBotBBBCore BBBC;
+
+	ros::spin();
+
+	return 0;
 }

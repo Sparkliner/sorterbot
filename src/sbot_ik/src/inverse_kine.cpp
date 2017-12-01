@@ -2,7 +2,6 @@
 #include "sbot_msg/Position2D.h"
 #include "sbot_msg/JointTarget.h"
 #include <math.h>
-#include <string>
 
 #define PI 3.1414926535897932
 
