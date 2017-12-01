@@ -12,14 +12,14 @@
 class SorterBotBBBCore
 {
 
-enum SysState {
-	READY, RETRIEVAL, DELIVERY
-};
+	enum SysState {
+		READY, RETRIEVAL, DELIVERY
+	};
 
-struct position{
-	double x;
-	double y;
-};
+	struct position{
+		double x;
+		double y;
+	};
 
 private:
 	SysState SBState;
@@ -56,7 +56,35 @@ private:
 
 	void chooseDropTarget(const sbot_msg::TargetColor::ConstPtr& tcolor)
 	{
+		dropposition.x = 0;
+		dropposition.y = 0;
 
+		switch(tcolor->color) {
+			case sbot_msg::TargetColor::BLACK:
+				dropposition.x = BLACK.x;
+				dropposition.y = BLACK.y;
+				break;
+
+			case sbot_msg::TargetColor::BLUE:
+				dropposition.x = BLUE.x;
+				dropposition.y = BLUE.y;
+				break;
+
+			case sbot_msg::TargetColor::RED:
+				dropposition.x = RED.x;
+				dropposition.y = RED.y;
+				break;
+
+			case sbot_msg::TargetColor::YELLOW:
+				dropposition.x = YELLOW.x;
+				dropposition.y = YELLOW.y;
+				break;
+
+			case sbot_msg::TargetColor::GREEN:
+				dropposition.x = GREEN.x;
+				dropposition.y = GREEN.y;
+				break;
+		}
 	}
 
 	void monitorEFState(const sbot_msg::EFStatus::ConstPtr& efstat)

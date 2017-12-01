@@ -1,4 +1,5 @@
 #Color of targeted object
+uint8 color
 
 uint8 BLACK=0
 uint8 BLUE=1
