@@ -1,4 +1,4 @@
 #Command send to end effector, as string
-#"Grab" or "Drop"
 
-string cmd
+uint8 CMD_GRAB=0
+uint8 CMD_DROP=1

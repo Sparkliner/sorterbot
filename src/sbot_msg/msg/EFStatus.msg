@@ -1,4 +1,4 @@
 #message relaying status of end effector
-#"Done" when done
 
-string status
+uint8 EF_READY=1
+uint8 EF_BUSY=0
