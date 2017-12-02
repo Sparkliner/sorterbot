@@ -11,30 +11,26 @@
 
 class SorterBotBBBCore
 {
-
-	enum SysState {
-		READY, RETRIEVAL, DELIVERY
-	};
-
-	struct position{
-		double x;
-		double y;
-	};
-
 private:
-	SysState SBState;
-	position grabposition;
-	position dropposition;
-
 	ros::NodeHandle n;
+
+	ros::Publisher SBotStatusPub;
 	ros::Publisher PositionPub;
 	ros::Publisher EFCommandPub;
+
 	ros::Subscriber ColorSub;
 	ros::Subscriber EFStatusSub;
 	ros::Subscriber IPSub;
 
+	sbot_msg::SBotStatus sbstate;
+	sbot_msg::Position2D grabposition;
+	sbot_msg::Position2D dropposition;
+	sbot_msg::EFCommand efcmd;
+
 	void chooseGrabTarget(const sbot_msg::Position2D::ConstPtr& loc)
 	{
+		sbstate.status = sbot_msg::SBotStatus::SB_RETRIEVAL;
+
 		double offsetx, offsety;
 		//Add offsets to position
 		double x = double(loc->x);
@@ -47,18 +43,16 @@ private:
 		grabposition.x = x + offsetx;
 		grabposition.y = y + offsety;
 
-		sbot_msg::Position2D posmsg;
-		posmsg.x = grabposition.x;
-		posmsg.y = grabposition.y;
+		//tell arm to move into position
+		PositionPub.publish(grabposition);
 
-		PositionPub.publish(posmsg);
+		//notify end effector that it should get ready to grab
+		efcmd.command = sbot_msg::EFCommand::CMD_GRAB;
+		EFCommandPub.publish(efcmd);
 	}
 
 	void chooseDropTarget(const sbot_msg::TargetColor::ConstPtr& tcolor)
 	{
-		dropposition.x = 0;
-		dropposition.y = 0;
-
 		switch(tcolor->color) {
 			case sbot_msg::TargetColor::BLACK:
 				dropposition.x = BLACK.x;
@@ -88,19 +82,51 @@ private:
 	}
 
 	void monitorEFState(const sbot_msg::EFStatus::ConstPtr& efstat)
-	{}
+	{
+		if (efstat->status == sbot_msg::EFStatus::EF_READY)
+		{
+			//successfully picked up/dropped item
+			if (sbstate.status == sbot_msg::SBotStatus::SB_RETRIEVAL)
+			{
+				//we got the item, let's deliver it now
+				sbstate.status = sbot_msg::SBotStatus::SB_DELIVERY;
+				//update target and signal arm to move
+				PositionPub.publish(dropposition);
+				//Notify end effector that it should get ready to drop
+				efcmd.command = sbot_msg::EFCommand::CMD_DROP;
+				EFCommandPub.publish(efcmd);
+			}
+			else if (sbstate.status == sbot_msg::SBotStatus::SB_DELIVERY)
+			{
+				//we've delivered the item, ready for the next one
+				sbstate.status = sbot_msg::SBotStatus::SB_READY;
+
+				//let home base know
+				SBotStatusPub.publish(sbstate);
+			}
+		}
+	}
 
 public:
 	SorterBotBBBCore()
 	{
-		SBState = READY;
+		sbstate.status = sbot_msg::SBotStatus::SB_READY;
+		grabposition.x = 0;
+		grabposition.y = 0;
+
+		dropposition.x = 0;
+		dropposition.y = 0;
 		//advertise topics here
 		PositionPub = n.advertise<sbot_msg::Position2D>("targetposition",1000);
 		EFCommandPub = n.advertise<sbot_msg::EFCommand>("ef_command",1000);
+		SBotStatusPub = n.advertise<sbot_msg::SBotStatus>("sbot_status",1000);
 		//subscribe topics here
 		IPSub = n.subscribe("relativeposition", 1000, &SorterBotBBBCore::chooseGrabTarget,this);
 		ColorSub = n.subscribe("targetcolor", 1000, &SorterBotBBBCore::chooseDropTarget,this);
 		EFStatusSub = n.subscribe("ef_status", 1000, &SorterBotBBBCore::monitorEFState,this);
+
+		//publish that we're ready for our first item;
+		SBotStatusPub.publish(sbstate);
 	}
 };
 
