@@ -101,6 +101,13 @@ private:
 				//we've delivered the item, ready for the next one
 				sbstate.status = sbot_msg::SBotStatus::SB_READY;
 
+				//reset all our positions to avoid a mess
+				grabposition.x = 0;
+				grabposition.y = 0;
+
+				dropposition.x = 0;
+				dropposition.y = 0;
+
 				//let home base know
 				SBotStatusPub.publish(sbstate);
 			}
