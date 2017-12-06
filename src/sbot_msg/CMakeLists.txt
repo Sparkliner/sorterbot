@@ -55,7 +55,7 @@ find_package(catkin REQUIRED COMPONENTS
    EFCommand.msg
    EFStatus.msg
    SBotStatus.msg
-   TargetColor.msg
+   TargetData.msg
  )
 
 ## Generate services in the 'srv' folder

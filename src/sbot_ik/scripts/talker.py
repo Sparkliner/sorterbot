@@ -6,7 +6,7 @@ from sbot_msg.msg import Position2D
 def talker():
 	pub = rospy.Publisher('targetposition', Position2D, queue_size =10)
 	rospy.init_node('talker', anonymous=True)
-	rate = rospy.Rate(0.2)
+	rate = rospy.Rate(1)
 	outputData = Position2D()
 	myX = 20
 	myY = 30
@@ -14,12 +14,12 @@ def talker():
 		outputData.x = myX
 		outputData.y = myY
 
-		# myX = myX+1
-		# if (myX > 43):
-		# 	myX = -43
-		# 	myY = myY + 1
-		# 	if (myY > 43):
-		# 		myY = -43
+		myX = myX+5
+		if (myX > 43):
+			myX = -43
+			myY = myY + 5
+			if (myY > 43):
+				myY = -43
 
 		#rospy.loginfo(outputData)
 		pub.publish(outputData)
