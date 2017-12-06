@@ -23,6 +23,7 @@ def listener():
 		GPIO.output("P8_10", GPIO.HIGH)
 		rospy.sleep(5.)
 		GPIO.output("P8_10", GPIO.LOW)
+		rospy.sleep(5.)
 
 
 if __name__ == '__main__':
