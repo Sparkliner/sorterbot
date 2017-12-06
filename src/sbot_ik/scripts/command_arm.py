@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import rospy
+import rosp
 from sbot_msg.msg import JointTarget
 import Adafruit_BBIO.PWM as PWM
 
