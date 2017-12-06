@@ -30,10 +30,10 @@ def listener():
 
 	rospy.spin()
 
+if __name__ == '__main__':
+	listener()
+
 	#shutdown channels and cleanup
 	PWM.stop("P9_14")
 	PWM.stop("P9_16")
 	PWM.cleanup()
-
-if __name__ == '__main__':
-	listener()
