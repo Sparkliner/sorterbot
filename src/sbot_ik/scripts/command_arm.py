@@ -24,7 +24,15 @@ def sendArmCommand(jtarget):
 	PWM.start("P9_14", dutycyc1, SERVO_FREQUENCY, 0) #joint 1
 	PWM.start("P9_16", dutycyc2, SERVO_FREQUENCY, 0) #joint 2
 
+def shutItDown():
+	#shutdown channels and cleanup
+	PWM.stop("P9_14")
+	PWM.stop("P9_16")
+	PWM.cleanup()
+
 def listener():
+	rospy.on_shutdown(shutItDown)
+
 	rospy.init_node('joint_target_listener', anonymous=True)
 	rospy.Subscriber("servo_angle_target", JointTarget, sendArmCommand)
 
@@ -32,8 +40,3 @@ def listener():
 
 if __name__ == '__main__':
 	listener()
-
-	#shutdown channels and cleanup
-	PWM.stop("P9_14")
-	PWM.stop("P9_16")
-	PWM.cleanup()
