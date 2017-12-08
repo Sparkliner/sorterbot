@@ -61,17 +61,14 @@ private:
 				break;
 			}
 
-			double offsetx, offsety;
 			//Add offsets to position
 			double x = double(tdata->x);
 			double y = double(tdata->y);
 
 			//calculate using relative position
-			offsetx = 0;
-			offsety = 0;
 
-			grabposition.x = x + offsetx;
-			grabposition.y = y + offsety;
+			grabposition.x = x + ORIGIN_X;
+			grabposition.y = ORIGIN_Y - y;
 
 			//tell arm to move into position
 			PositionPub.publish(grabposition);
@@ -94,6 +91,7 @@ private:
 				//update target and signal arm to move
 				PositionPub.publish(dropposition);
 				//Notify end effector that it should get ready to drop
+				ros::Duration(SERVO_DELAY).sleep();
 				efcmd.command = sbot_msg::EFCommand::CMD_DROP;
 				EFCommandPub.publish(efcmd);
 			}
