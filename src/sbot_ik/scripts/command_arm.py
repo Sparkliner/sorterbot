@@ -3,8 +3,8 @@ import rospy
 from sbot_msg.msg import JointTarget
 import Adafruit_BBIO.PWM as PWM
 
-JOINT1MAX = 270
-JOINT2MAX = 270
+JOINT1MAX = 270.0
+JOINT2MAX = 270.0
 MINPULSE_MS = 0.5
 MAXPULSE_MS = 2.5
 SERVO_FREQUENCY = 50
@@ -14,11 +14,14 @@ MINDUT = MINPULSE_MS*(SERVO_FREQUENCY/1000.0)*100
 MAXDUT = MAXPULSE_MS*(SERVO_FREQUENCY/1000.0)*100
 
 def sendArmCommand(jtarget):
-	angle1 = jtarget.joint1
-	angle2 = jtarget.joint2
+	#angle1 = jtarget.joint1
+	#angle2 = jtarget.joint2
+	angle1= 180.0
+	angle2 = 0.0
 	rospy.loginfo("Received angle1 =%f, angle2 =%f",angle1,angle2)
 	#calculate the proper duty cycle here
 	dutycyc1 = MINDUT + (MAXDUT-MINDUT)*(angle1/JOINT1MAX) #2.5 to 12.5
+	rospy.loginfo("Duty cycle set to %f",dutycyc1)
 	dutycyc2 = MINDUT + (MAXDUT-MINDUT)*(angle2/JOINT2MAX) #test different duty cycles
 	#PWM.start("PIN",dutycycle,frequency,polarity(1 is inverted))
 	PWM.start("P9_14", dutycyc1, SERVO_FREQUENCY, 0) #joint 1
