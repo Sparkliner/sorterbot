@@ -4,7 +4,7 @@ from sbot_msg.msg import JointTarget
 import Adafruit_BBIO.PWM as PWM
 
 JOINT1MAX = 270
-JOINT2MAX = 180
+JOINT2MAX = 270
 MINPULSE_MS = 0.5
 MAXPULSE_MS = 2.5
 SERVO_FREQUENCY = 50
