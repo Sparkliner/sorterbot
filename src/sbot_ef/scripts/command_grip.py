@@ -30,9 +30,9 @@ def listener():
 
 	
 	while not rospy.is_shutdown():
-		if GPIO.input(IN_PIN)
+		if GPIO.input(IN_PIN):
 			rospy.loginfo("INPUT HIGH")
-		else
+		else:
 			rospy.loginfo("INPUT LOW")
 		# GPIO.output(OUT_PIN, GPIO.HIGH)
 		# rospy.sleep(5.)
