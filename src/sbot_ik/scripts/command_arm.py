@@ -16,7 +16,7 @@ MAXDUT = MAXPULSE_MS*(SERVO_FREQUENCY/1000.0)*100
 def sendArmCommand(jtarget):
 	#angle1 = jtarget.joint1
 	#angle2 = jtarget.joint2
-	angle1= 180.0
+	angle1= 90.0
 	angle2 = 0.0
 	rospy.loginfo("Received angle1 =%f, angle2 =%f",angle1,angle2)
 	#calculate the proper duty cycle here

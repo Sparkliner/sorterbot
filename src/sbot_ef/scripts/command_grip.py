@@ -10,9 +10,9 @@ OUT_PIN = "P8_10"
 IN_PIN = "P8_14"
 SERVO_PIN = "P8_13"
 
-SERVOMAX = 180
-ANGLE_LOWERED = 90
-ANGLE_RAISED = 30
+SERVOMAX = 180.0
+ANGLE_LOWERED = 90.0
+ANGLE_RAISED = 30.0
 MINPULSE_MS = 0.5
 MAXPULSE_MS = 2.5
 SERVO_FREQUENCY = 50
@@ -29,7 +29,7 @@ def shutItDown():
 def initialize(cmdmessage):
 	if (cmdmessage.command == cmdmessage.CMD_GRAB):
 		#reset servo just in case
-		angle = 0;
+		angle = 0.0;
 		#move in to grab
 		while ((not GPIO.input(IN_PIN)) and (angle < ANGLE_LOWERED)):
 			dutycyc = MINDUT + (MAXDUT-MINDUT)*(angle/JOINT1MAX)
@@ -55,9 +55,10 @@ def initialize(cmdmessage):
 			msg = EFStatus()
 			msg.status = msg.EF_READY
 			pub.publish(msg)
-	else if (cmdmessage.command == cmdmessage.CMD_DROP):
-		#kinda like in reverse
-		GPIO.output(OUT_PIN, GPIO.LOW) #but not really, we just drop it
+	#else:
+	#	if (cmdmessage.command == cmdmessage.CMD_DROP):
+	#		#kinda like in reverse
+	#		GPIO.output(OUT_PIN, GPIO.LOW) #but not really, we just drop it
 	else:
 		#uh, this shouldn't happen
 		pass
@@ -92,7 +93,7 @@ def initialize():
 		# GPIO.output(OUT_PIN, GPIO.LOW)
 		# rospy.sleep(5.)
 
-def inputtest()
+def inputtest():
 	rospy.on_shutdown(shutItDown)
 
 	rospy.init_node('pump_gpio_control', anonymous=True)
