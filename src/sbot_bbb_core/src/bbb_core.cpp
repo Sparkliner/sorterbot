@@ -94,6 +94,7 @@ private:
 				//update target and signal arm to move
 				PositionPub.publish(dropposition);
 				//Notify end effector that it should get ready to drop
+				ros::Duration(SERVO_DELAY).sleep();
 				efcmd.command = sbot_msg::EFCommand::CMD_DROP;
 				EFCommandPub.publish(efcmd);
 			}
