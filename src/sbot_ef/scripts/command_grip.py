@@ -28,6 +28,8 @@ def shutItDown():
 
 def initialize(cmdmessage):
 	if (cmdmessage.command == cmdmessage.CMD_GRAB):
+		#initialize suckage
+		GPIO.output(OUT_PIN, GPIO.HIGH)
 		#reset servo just in case
 		angle = 0.0;
 		#move in to grab
@@ -37,8 +39,7 @@ def initialize(cmdmessage):
 			angle += 5
 			rospy.sleep(0.25)
 		if GPIO.input(IN_PIN):
-			#we have contacted something, turn on vacuum
-			GPIO.output(OUT_PIN, GPIO.HIGH)
+			#we have contacted something
 			#carefully retract
 			while ((GPIO.input(IN_PIN)) and (angle > ANGLE_RAISED)):
 				dutycyc = MINDUT + (MAXDUT-MINDUT)*(angle/JOINT1MAX)
@@ -47,18 +48,21 @@ def initialize(cmdmessage):
 				rospy.sleep(0.5)
 		if not (GPIO.input(IN_PIN)):
 			#we dropped it or never got it in the first place
-			pass
-			#do nothing else for now
+			while ((GPIO.input(IN_PIN)) and (angle > ANGLE_RAISED)):
+				dutycyc = MINDUT + (MAXDUT-MINDUT)*(angle/JOINT1MAX)
+				PWM.start(SERVO_PIN, dutycyc, SERVO_FREQUENCY, 0)
+				angle -= 5
+				rospy.sleep(0.5)
+			#for now, retract as usual
 		else:
 			#we made it this far, this probably still have it
 			pub = rospy.Publisher('ef_status', EFStatus, queue_size =10)
 			msg = EFStatus()
 			msg.status = msg.EF_READY
 			pub.publish(msg)
-	#else:
-	#	if (cmdmessage.command == cmdmessage.CMD_DROP):
-	#		#kinda like in reverse
-	#		GPIO.output(OUT_PIN, GPIO.LOW) #but not really, we just drop it
+	elif (cmdmessage.command == cmdmessage.CMD_DROP):
+			#kinda like in reverse
+			GPIO.output(OUT_PIN, GPIO.LOW) #end suckage
 	else:
 		#uh, this shouldn't happen
 		pass
@@ -111,4 +115,4 @@ def inputtest():
 
 
 if __name__ == '__main__':
-	inputtest()
+	initialize()
