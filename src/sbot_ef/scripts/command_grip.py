@@ -92,6 +92,22 @@ def initialize():
 		# GPIO.output(OUT_PIN, GPIO.LOW)
 		# rospy.sleep(5.)
 
+def inputtest()
+	rospy.on_shutdown(shutItDown)
+
+	rospy.init_node('pump_gpio_control', anonymous=True)
+
+	GPIO.setup(OUT_PIN, GPIO.OUT)
+	GPIO.setup(IN_PIN, GPIO.IN)
+
+	while not rospy.is_shutdown():
+		if GPIO.input(IN_PIN):
+			rospy.loginfo("Switch closed")
+		else:
+			rospy.loginfo("Switch open")
+
+
+
 
 if __name__ == '__main__':
-	initialize()
+	inputtest()

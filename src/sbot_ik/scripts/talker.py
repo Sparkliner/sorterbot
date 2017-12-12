@@ -9,15 +9,15 @@ def talker():
 	rate = rospy.Rate(1)
 	outputData = Position2D()
 	myX = 0
-	myY = 35
+	myY = 60
 	while not rospy.is_shutdown():
 		outputData.x = myX
 		outputData.y = myY
 
-		myX = myX+5
-		if (myX > 43):
-			myX = -43
-			# myY = myY + 5
+		# myX = myX+5
+		# if (myX > 43):
+		# 	myX = -43
+		 	# myY = myY + 5
 			# if (myY > 43):
 			# 	myY = -43
 
