@@ -40,8 +40,8 @@ public:
 		y = double(loc->y);
 
 		// law of cosines
-		angle2 = acos((pow(x,2)+pow(y,2)-pow(L1,2)-pow(L2,2))/(2*L1*L2));
-		angle1 = atan2(-L2*sin(angle2)*x+(L1+L2*cos(angle2))*y,(L1+L2*cos(angle2))*x+L2*sin(angle2)*y);
+		angle2 = acos((pow(x,2)+pow(y,2)-pow(L1,2)-pow(L2,2))/(-2*L1*L2));
+		angle1 = atan2(L2*sin(angle2)*x+(L1-L2*cos(angle2))*y,(L1-L2*cos(angle2))*x-L2*sin(angle2)*y);
 
 		//convert to degrees and wrap to 0-360
 		angle1 = wrapAngle(angle1*180.0/PI);
