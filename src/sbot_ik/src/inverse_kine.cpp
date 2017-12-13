@@ -5,8 +5,8 @@
 
 #define PI 3.1414926535897932
 
-#define L1 25.4 //link 1
-#define L2 25.4 //link 2
+#define L1 27.94 //cm, link 1
+#define L2 27.94 //link 2
 
 #define ERR 10 //offset from singularity in degrees
 
