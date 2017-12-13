@@ -14,12 +14,12 @@ def talker():
 		outputData.x = myX
 		outputData.y = myY
 
-		 myX = myX+1
-		 if (myX > 23):
-		 	myX = -23
-		 		myY = myY + 2
-				if (myY > 54):
-				myY = 23
+		myX = myX+1
+		if (myX > 23):
+			myX = -23
+			myY = myY + 2
+			if (myY > 54):
+			myY = 23
 
 		#rospy.loginfo(outputData)
 		pub.publish(outputData)
