@@ -8,7 +8,7 @@
 #define L1 27.94 //cm, link 1
 #define L2 27.94 //link 2
 
-#define ERR 10 //offset from singularity in degrees
+#define ERR 10.0 //offset from singularity in degrees
 
 class InverseKinematicSubPub
 {
@@ -40,7 +40,7 @@ public:
 		y = double(loc->y);
 
 		// law of cosines
-		angle2 = acos((pow(x,2)+pow(y,2)-pow(L1,2)-pow(L2,2))/(-2*L1*L2));
+		angle2 = acos((pow(x,2)+pow(y,2)-pow(L1,2)-pow(L2,2))/(-2.0*L1*L2));
 		angle1 = atan2(L2*sin(angle2)*x+(L1-L2*cos(angle2))*y,(L1-L2*cos(angle2))*x-L2*sin(angle2)*y);
 
 		//convert to degrees and wrap to 0-360
@@ -65,13 +65,13 @@ public:
 		//avoid singularity conditions by using offset ERR
 		if (abs(angle2-180.0) < ERR)
 		{
-			ROS_INFO("Robot at fully bent singularity");
+			ROS_INFO("Robot at fully extended singularity");
 			angle2 = 180.0 - ERR;
 		}
 
 		if (abs(angle2) < ERR)
 		{
-			ROS_INFO("Robot at fully extended singularity");
+			ROS_INFO("Robot at fully bent singularity");
 			angle2 = ERR;
 		}
 
