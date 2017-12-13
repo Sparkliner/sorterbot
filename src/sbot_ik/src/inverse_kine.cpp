@@ -52,7 +52,7 @@ public:
 		{
 			ROS_INFO("Robot tried to reach too far");
 			angle1 = wrapAngle(atan2(y,x)*180.0/PI);
-			angle2 = ERR;
+			angle2 = 180-ERR;
 		}
 
 		if (angle1 > 270)
