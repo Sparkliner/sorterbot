@@ -19,7 +19,7 @@ def talker():
 			myX = -23
 			myY = myY + 2
 			if (myY > 54):
-			myY = 23
+				myY = 23
 
 		#rospy.loginfo(outputData)
 		pub.publish(outputData)
