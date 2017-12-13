@@ -1,0 +1,6 @@
+<launch>
+	<node pkg="sbot_bbb_core" name="bbbcore" type="bbb_core"/>
+	<node pkg="sbot_ik" name="ikcalc" type="inverse_kine"/>
+	<node pkg="sbot_ik" name="cmdarm" type="command_arm.py"/>
+	<node pkg="sbot_ef" name="endeff" type="command_grip.py"/>
+</launch>
