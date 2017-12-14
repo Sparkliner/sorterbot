@@ -23,10 +23,21 @@ MAXDUT = MAXPULSE_MS*(SERVO_FREQUENCY/1000.0)*100
 
 def shutItDown():
 	#turn pump off
+	PWM.start(SERVO_PIN, MINDUT, SERVO_FREQUENCY, 0)
+	PWM.stop(SERVO_PIN)
 	GPIO.output(OUT_PIN, GPIO.LOW)
 	GPIO.cleanup()
+	PWM.cleanup()
 
 def commandlistener(cmdmessage):
+	GPIO.setup(OUT_PIN, GPIO.OUT)
+        GPIO.setup(IN_PIN, GPIO.IN)
+	pub = rospy.Publisher('ef_status', EFStatus, queue_size=10)
+	rospy.sleep(5)
+        msg = EFStatus()
+        msg.status = msg.EF_BUSY
+        pub.publish(msg)
+
 	if (cmdmessage.command == cmdmessage.CMD_GRAB):
 		#initialize suckage
 		GPIO.output(OUT_PIN, GPIO.HIGH)
@@ -56,31 +67,36 @@ def commandlistener(cmdmessage):
 			#for now, retract as usual
 		else:
 			#we made it this far, this probably still have it
-			pub = rospy.Publisher('ef_status', EFStatus, queue_size =10)
 			msg = EFStatus()
 			msg.status = msg.EF_READY
 			pub.publish(msg)
-	elif (cmdmessage.command == cmdmessage.CMD_DROP):
+	else:
 		#kinda like in reverse
 		GPIO.output(OUT_PIN, GPIO.LOW) #end suckage
 		#reset angle
 		angle = 0.0
 		dutycyc = MINDUT + (MAXDUT-MINDUT)*(angle/SERVOMAX)
 		PWM.start(SERVO_PIN, dutycyc, SERVO_FREQUENCY, 0)
-	else:
-		#uh, this shouldn't happen
-		pass
-
-
+	
 def initialize():
 	rospy.on_shutdown(shutItDown)
-
+	PWM.start(SERVO_PIN, MINDUT, SERVO_FREQUENCY, 0)
 	rospy.init_node('pump_gpio_control', anonymous=True)
+	#GPIO.setup(OUT_PIN, GPIO.OUT)
+        #GPIO.setup(IN_PIN, GPIO.IN)
+	#initialize suckage
+        #GPIO.output(OUT_PIN, GPIO.HIGH)
+        #reset servo just in case
+        #angle = 0.0
+        #move in to grab
+        #while ((not GPIO.input(IN_PIN)) and (angle < ANGLE_LOWERED)):
+        #        dutycyc = MINDUT + (MAXDUT-MINDUT)*(angle/SERVOMAX)
+        #        PWM.start(SERVO_PIN, dutycyc, SERVO_FREQUENCY, 0)
+        #        angle += 5
+        #        rospy.sleep(0.25)
 
-	GPIO.setup(OUT_PIN, GPIO.OUT)
-	GPIO.setup(IN_PIN, GPIO.IN)
 
-	rospy.Subscriber("ef_command", EFCommand, commandlistener)
+	rospy.Subscriber('ef_command', EFCommand, commandlistener)
 
 	rospy.spin()
 	#test code
@@ -110,8 +126,6 @@ def inputtest():
 			rospy.loginfo("Switch closed")
 		else:
 			rospy.loginfo("Switch open")
-
-
 
 
 if __name__ == '__main__':

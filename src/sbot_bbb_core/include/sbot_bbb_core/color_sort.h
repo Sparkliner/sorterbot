@@ -2,8 +2,8 @@
 //Edit the coordinates with the proper box for that color
 
 #define SERVO_DELAY 5 //seconds
-#define ORIGIN_X -30.0
-#define ORIGIN_Y 60.0
+#define ORIGIN_X -22.0
+#define ORIGIN_Y 57.0
 
 struct BOX1{
 	double x = -14;

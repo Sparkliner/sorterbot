@@ -76,6 +76,10 @@ private:
 			//notify end effector that it should get ready to grab
 			efcmd.command = sbot_msg::EFCommand::CMD_GRAB;
 			EFCommandPub.publish(efcmd);
+			EFCommandPub.publish(efcmd);
+			EFCommandPub.publish(efcmd);
+			EFCommandPub.publish(efcmd);
+			EFCommandPub.publish(efcmd);
 		}
 	}
 
@@ -130,7 +134,7 @@ public:
 		EFStatusSub = n.subscribe("ef_status", 1000, &SorterBotBBBCore::monitorEFState,this);
 
 		//wait for everything to go through
-		ros::Duration(1).sleep(); //sleep defined in seconds
+		ros::Duration(5).sleep(); //sleep defined in seconds
 
 		//publish that we're ready for our first item;
 		SBotStatusPub.publish(sbstate);
