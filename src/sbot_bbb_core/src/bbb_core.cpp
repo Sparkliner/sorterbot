@@ -76,10 +76,10 @@ private:
 			//notify end effector that it should get ready to grab
 			efcmd.command = sbot_msg::EFCommand::CMD_GRAB;
 			EFCommandPub.publish(efcmd);
-			EFCommandPub.publish(efcmd);
-			EFCommandPub.publish(efcmd);
-			EFCommandPub.publish(efcmd);
-			EFCommandPub.publish(efcmd);
+			//EFCommandPub.publish(efcmd);
+			//EFCommandPub.publish(efcmd);
+			//EFCommandPub.publish(efcmd);
+			//EFCommandPub.publish(efcmd);
 		}
 	}
 

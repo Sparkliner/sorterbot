@@ -11,8 +11,8 @@ IN_PIN = "P8_14"
 SERVO_PIN = "P8_13"
 
 SERVOMAX = 180.0
-ANGLE_LOWERED = 90.0
-ANGLE_RAISED = 30.0
+ANGLE_LOWERED = 80.0
+ANGLE_RAISED = 0.0
 MINPULSE_MS = 0.5
 MAXPULSE_MS = 2.5
 SERVO_FREQUENCY = 50
@@ -32,8 +32,7 @@ def shutItDown():
 def commandlistener(cmdmessage):
 	GPIO.setup(OUT_PIN, GPIO.OUT)
         GPIO.setup(IN_PIN, GPIO.IN)
-	pub = rospy.Publisher('ef_status', EFStatus, queue_size=10)
-	rospy.sleep(5)
+	rospy.sleep(2)
         msg = EFStatus()
         msg.status = msg.EF_BUSY
         pub.publish(msg)
@@ -52,24 +51,23 @@ def commandlistener(cmdmessage):
 		if GPIO.input(IN_PIN):
 			#we have contacted something
 			#carefully retract
-			while ((GPIO.input(IN_PIN)) and (angle > ANGLE_RAISED)):
+			while ((angle > ANGLE_RAISED)):
 				dutycyc = MINDUT + (MAXDUT-MINDUT)*(angle/SERVOMAX)
 				PWM.start(SERVO_PIN, dutycyc, SERVO_FREQUENCY, 0)
 				angle -= 5
 				rospy.sleep(0.5)
 		if not (GPIO.input(IN_PIN)):
 			#we dropped it or never got it in the first place
-			while ((GPIO.input(IN_PIN)) and (angle > ANGLE_RAISED)):
+			while ((angle > ANGLE_RAISED)):
 				dutycyc = MINDUT + (MAXDUT-MINDUT)*(angle/SERVOMAX)
 				PWM.start(SERVO_PIN, dutycyc, SERVO_FREQUENCY, 0)
 				angle -= 5
 				rospy.sleep(0.5)
 			#for now, retract as usual
-		else:
-			#we made it this far, this probably still have it
-			msg = EFStatus()
-			msg.status = msg.EF_READY
-			pub.publish(msg)
+		#we made it this far, this probably still have it
+		msg = EFStatus()
+		msg.status = msg.EF_READY
+		pub.publish(msg)
 	else:
 		#kinda like in reverse
 		GPIO.output(OUT_PIN, GPIO.LOW) #end suckage
@@ -77,11 +75,16 @@ def commandlistener(cmdmessage):
 		angle = 0.0
 		dutycyc = MINDUT + (MAXDUT-MINDUT)*(angle/SERVOMAX)
 		PWM.start(SERVO_PIN, dutycyc, SERVO_FREQUENCY, 0)
+		msg = EFStatus()
+		msg.status = msg.EF_READY
+		pub.publish(msg)
 	
 def initialize():
+	global pub
 	rospy.on_shutdown(shutItDown)
 	PWM.start(SERVO_PIN, MINDUT, SERVO_FREQUENCY, 0)
 	rospy.init_node('pump_gpio_control', anonymous=True)
+	pub = rospy.Publisher('ef_status', EFStatus, queue_size=1000, latch = True)
 	#GPIO.setup(OUT_PIN, GPIO.OUT)
         #GPIO.setup(IN_PIN, GPIO.IN)
 	#initialize suckage
