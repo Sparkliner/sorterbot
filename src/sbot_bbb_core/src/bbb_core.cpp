@@ -127,7 +127,7 @@ public:
 		dropposition.y = 0;
 		//advertise topics here
 		PositionPub = n.advertise<sbot_msg::Position2D>("targetposition",1000);
-		EFCommandPub = n.advertise<sbot_msg::EFCommand>("ef_command",1000);
+		EFCommandPub = n.advertise<sbot_msg::EFCommand>("ef_command",1000,true);
 		SBotStatusPub = n.advertise<sbot_msg::SBotStatus>("sbot_status",1000);
 		//subscribe topics here
 		LapSub = n.subscribe("targetdata", 1000, &SorterBotBBBCore::chooseGrabTarget,this);
